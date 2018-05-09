@@ -10,6 +10,8 @@ const fs = require('fs');
 
 var acc = process.argv[2]
 var pw = process.argv[3]
+var start = '2018-04-02'
+var end = '2018-05-07'
 
 function extractItems() {
 
@@ -54,8 +56,8 @@ async function loadDateData(page) {
   const items = {}
   try{
     var moment = require("moment")
-    var a = moment('2016-01-01');
-    var b = moment('2018-05-07');
+    var a = moment(start);
+    var b = moment(end);
     for (var m = moment(a); m.isBefore(b); m.add(1, 'days')) {
       var year = m.format('YYYY')
       var month = m.format('MM')

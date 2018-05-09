@@ -7,9 +7,9 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 
 // var m = moment(process.argv[2]);
-// var refId = process.argv[3]
-// var acc = process.argv[4]
-// var pw = process.argv[5]
+
+var acc = process.argv[2]
+var pw = process.argv[3]
 
 function extractItems() {
 
@@ -47,11 +47,11 @@ async function login(page, {acc, pw}) {
   await page.type('input#password', pw)
   await page.click('.login_btn')
   await page.waitFor(2000);
-  console.log('login')
+  // console.log('login')
 }
 
 async function loadDateData(page) {
-  const items = []
+  const items = {}
   try{
     var moment = require("moment")
     var a = moment('2016-01-01');
@@ -113,7 +113,8 @@ async function loadDateData(page) {
         })
         return finalResult
       })
-      items.push(table)
+      var tdate = `${year}${month}${day}`
+      items[tdate] = (table)
     }
     return items
   } catch(e){
@@ -121,7 +122,7 @@ async function loadDateData(page) {
   }
 }
 
-(async () => {
+(async (acc, pw) => {
   //set up browser and page 
   const browser = await puppeteer.launch({
     headless: true,
@@ -130,13 +131,13 @@ async function loadDateData(page) {
   const page = await browser.newPage();
   await page.goto('https://pccs.kepco.co.kr/iSmart/jsp/cm/login/main.jsp')
   const loginStatus = await login(page, {
-    acc: '0339061375',
-    pw: 'q39061375'
+    acc: acc, //'0339061375',
+    pw: pw //'q39061375'
   })
   const items = await loadDateData(page);
   // Save extracted items to a file.
   console.log('iterator')
   const result = JSON.stringify(items)
-  fs.writeFileSync('./items.txt', result);
+  fs.writeFileSync(`./items_${acc}.txt`, result);
   await browser.close();
-})();
+})(acc, pw);

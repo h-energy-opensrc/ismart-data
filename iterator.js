@@ -10,7 +10,7 @@ const fs = require('fs');
 
 var acc = process.argv[2]
 var pw = process.argv[3]
-var start = '2018-04-02'
+var start = '2016-01-01'
 var end = '2018-05-07'
 
 function extractItems() {
@@ -52,7 +52,22 @@ async function login(page, {acc, pw}) {
   // console.log('login')
 }
 
+var admin = require("firebase-admin");
+  var _ = require("lodash")
+
+  var serviceAccount = require("./fbkey.json");
+
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://postechproject.firebaseio.com"
+  });
+
+var db = admin.database();
+var ref = db.ref("data/test1");
+
+
 async function loadDateData(page) {
+
   const items = {}
   try{
     var moment = require("moment")
